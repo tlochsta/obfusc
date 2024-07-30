@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>obfusc</title>
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#321845">
+<link rel="shortcut icon" href="/icons/favicon.ico">
+<meta name="msapplication-TileColor" content="#321845">
+<meta name="msapplication-config" content="/icons/browserconfig.xml">
+<meta name="theme-color" content="#321845">
+    <style>
+    body {
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    color: #fff;
+}
+
+.loading-screen {
+    text-align: center;
+}
+
+.logo {
+    width: 150px; 
+    margin-bottom: 20px;
+}
+
+.loading-bar {
+    position: relative;
+    width: 200px;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.loading-bar-inner {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-color: #321845;
+    animation: loading 2s infinite ease-in-out;
+}
+
+@keyframes loading {
+    0% {
+        left: -50%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: -50%;
+    }
+}
+
+.loading-text {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <img src="/assets/img/logo.png" alt="Logo" class="logo">
+        <div class="loading-bar">
+            <div class="loading-bar-inner"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>obfusc</title>
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#321845">
+<link rel="shortcut icon" href="/icons/favicon.ico">
+<meta name="msapplication-TileColor" content="#321845">
+<meta name="msapplication-config" content="/icons/browserconfig.xml">
+<meta name="theme-color" content="#321845">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="/chemical.js"></script>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+     <style>
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        .modal__content {
+        backdrop-filter: blur(10px);
+    background: rgba(18, 18, 18, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s;
+        }
+        .modal__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .modal__title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #fff;
+        }
+        .modal__close {
+            cursor: pointer;
+            color: #fff;
+        }
+        .modal__description {
+            font-size: 14px;
+            color: #bbb;
+            margin-bottom: 15px;
+        }
+        .modal__input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+            outline: none;
+            transition: background-color 0.2s;
+        }
+        .modal__input:focus {
+            background-color: #4d4d4d;
+        }
+        .modal__button {
+            width: 100%;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+    background: rgba(20, 20, 20, 0.4);
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .modal__button:hover {
+            background: rgba(20, 20, 20, 0.2);
+        }
+    </style>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            font-weight: 100!important;
+        }
+        .fthin {
+            font-weight: 100;
+        }
+        .glass {
+            backdrop-filter: blur(10px);
+            background: rgba(18, 18, 18, 0.6);
+        }
+        #drawerOverlay {
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .transition-transform {
+            transition: transform 0.3s ease-in-out;
+        }
+        .slide-in {
+            transform: translateX(0);
+        }
+        .slide-out {
+            transform: translateX(-100%);
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+        .fade-out {
+            animation: fadeOut 0.3s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .bg-purple-900 {
+        background-color: #222!important
+        }
+        .bg-purple-900:hover {
+            color: #222!important;
+            background-color: #fff!important;
+        }
+        #drawer {
+    overflow-y: auto;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #4a4a4a transparent; /* For Firefox */
+}
+
+#drawer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#drawer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#drawer::-webkit-scrollbar-thumb {
+    background-color: #4a4a4a;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+#drawer::-webkit-scrollbar-thumb:hover {
+    background-color: #6a6a6a;
+}
+.loading-bar {
+    position: relative;
+    width: 200px;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.loading-bar-inner {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-color: #321845;
+    animation: loading 2s infinite ease-in-out;
+}
+
+@keyframes loading {
+    0% {
+        left: -50%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: -50%;
+    }
+}
+
+
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 fthin">
+    <div class="relative h-screen">
+        <iframe id="proxyFrame" is="chemical-iframe" src="/loading.html" class="w-full h-full"></iframe>
+        <button id="drawerButton" class="fixed top-4 left-4 p-2 bg-gray-800 text-white rounded-full shadow-xl hover:bg-gray-700 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+
+
+        <div id="drawer" class="fixed top-0 left-0 h-full w-64 text-white transform -translate-x-full transition-transform z-50 shadow-2xl glass">
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold"><img src="/assets/img/logo.png" class="h-6" ></h2>
+                    <button id="closeDrawer" class="text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <div class="flex items-center mb-4 space-x-2 ">
+                        <button id="backButton" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+        <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <button id="refreshButton" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+<i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                        <button id="forwardButton" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+ <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center mb-4 space-x-2 ">
+                        <button id="openGoogle" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+        <i class="fa-brands fa-google"></i>
+                        </button>
+                        <button id="openYahoo" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+<i class="fa-brands fa-yahoo"></i>
+                        </button>
+                        <button id="openBookmarks" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+ <i class="fa-solid fa-bookmark"></i>
+                        </button>
+                    </div>
+                          <hr class="border-gray-600 mb-4">
+                    <div class="mb-2">
+                        <label class="text-lg font-semibold">Record</label>
+                    </div>
+<div class="flex items-center mb-4 space-x-2">
+    <button id="recordScreen" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+        Start
+    </button>
+    <button id="recordingTime" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+        00:00:00
+    </button>
+</div>
+       <hr class="border-gray-600 mb-4">
+                    <div class="mb-2">
+                        <label class="text-lg font-semibold"><span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 mr-1">NEW</span> AI</label>
+                    </div>
+                     <ul>
+                        <li class="mb-2">
+                            <button id="openAIModal" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+   <i class="fa-solid fa-robot ml-1 mr-3"></i>
+                                ObfuscAI
+                            </button>
+                        </li>
+                        </ul>
+                    <hr class="border-gray-600 mb-4">
+                    <div class="mb-2">
+                        <label class="text-lg font-semibold">Session Controls</label>
+                    </div>
+                    <ul>
+                        <li class="mb-2">
+                            <button id="takeScreenshot" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+   <i class="fa-solid fa-camera ml-1 mr-3"></i>
+                                Take Screenshot
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="changeUrl" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+  <i class="fa-solid fa-link ml-1 mr-3"></i>
+                                Change Web URL
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="newSession" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+<i class="fa-solid fa-plus ml-1 mr-3"></i>
+                                New Session
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="fullscreen" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+   <i class="fa-solid fa-expand ml-1 mr-3"></i>
+                                Fullscreen
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="generatePassword" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+ <i class="fa-solid fa-user-lock ml-1 mr-3"></i>
+                                Generate Password
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="clearStorage" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+<i class="fa-solid fa-trash ml-1 mr-3"></i>
+                                Clear Storage
+                            </button>
+                        </li>
+                                                <li class="mb-2">
+                            <button id="insertDevtools" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+<i class="fa-solid fa-code ml-1 mr-3"></i>
+                                Developer Tools
+                            </button>
+                        </li>
+                    </ul>
+                    <hr class="border-gray-600 my-4">
+                    <div class="mb-2">
+                        <label class="text-lg font-semibold">Controls</label>
+                    </div>
+                    <ul>
+                        <li class="mb-2">
+                            <button id="increaseVolume" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+    <i class="fa-solid fa-volume-high ml-1 mr-3"></i>
+                                Increase Volume
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="decreaseVolume" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+                 <i class="fa-solid fa-volume-low ml-1 mr-3"></i>
+                                Decrease Volume
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="zoomIn" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+<i class="fa-solid fa-magnifying-glass-plus ml-1 mr-3"></i>
+                                Zoom In
+                            </button>
+                        </li>
+                        <li class="mb-2">
+                            <button id="zoomOut" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition flex items-center">
+             <i class="fa-solid fa-magnifying-glass-minus ml-1 mr-3"></i>
+                                Zoom Out
+                            </button>
+                        </li>
+                    </ul>
+                    <hr class="border-gray-600 my-4">
+                    <div class="mb-2">
+                        <label class="text-lg font-semibold">Info</label>
+                    </div>
+                    <ul>
+                        <li class="mb-2">
+<div class="flex items-center mb-4 space-x-2 ">
+                          <button onclick="window.open('https://discord.gg/dKPnUkCa3j')" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+ <i class="fa-brands fa-discord"></i>
+                        </button>
+                          <button onclick="window.open('https://youtube.com/@tlochsta')" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+ <i class="fa-brands fa-youtube"></i>
+                        </button>
+                        <button onclick="window.open('https://github.com/tlochsta')" class="w-full p-2 bg-purple-900 rounded shadow-lg hover:bg-gray-400 transition">
+ <i class="fa-brands fa-github"></i>
+                        </button>
+                    </div>
+                        </li>
+                      
+                        <li class="mb-2">
+       <p class="text-sm text-gray-200">Obfusc Client v1.03<br><strong>obfusc.org</strong></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="drawerOverlay" class="fixed top-0 left-0 w-full h-full hidden"></div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal__content">
+            <div class="modal__header">
+                <div class="modal__title">Navigate to a new URL</div>
+                <i class="fas fa-times modal__close" onclick="closeModal('modal')"></i>
+            </div>
+            <div class="modal__description">No web protocol, such as https://, is required.</div>
+            <input id="inputText" type="text" class="modal__input" placeholder="Enter your url here...">
+            <button class="modal__button" id="SAVEchangeUrl">Save</button>
+        </div>
+    </div>
+    <div id="AImodal" class="modal">
+        <div class="modal__content">
+            <div class="modal__header">
+                <div class="modal__title">Obfusc AI</div>
+                <i class="fas fa-times modal__close" onclick="closeModal('AImodal')"></i>
+            </div>
+            <div class="modal__description">Powered by RiverAI</div>
+            <input id="userInput" type="text" class="modal__input" placeholder="Type your message..." required>
+            <div id="loadingAnimation" style="display:none;" class="p-3 glass rounded-md mb-3 text-center text-white">
+<div class="loading-bar">
+            <div class="loading-bar-inner"></div>
+        </div>
+            </div>
+            <div id="responseContainer" style="display:none;" class="p-3 glass rounded-md mb-3">
+                <p id="messageText" class="mt-2 text-white"></p>
+                <button class="modal__button" id="copyButton" onclick="copyResponse()" style="margin-top: 10px;">Copy Response</button>
+        </div>
+        <button class="modal__button" onclick="getPrediction()">Send</button>
+        </div>
+    </div>
+    <div id="bookmarks_modal" class="modal">
+    <div class="modal__content bg-gray-800 text-white p-6 rounded-lg">
+    
+        <div class="modal__header flex justify-between items-center">
+                    <div class="modal__title text-lg font-semibold">Bookmarks</div>
+                    
+            <i class="fas fa-times modal__close cursor-pointer" onclick="closeModal('bookmarks_modal')"></i>
+        </div>
+        <div class="modal__description mt-2">Save your websites and don't loose them!</div>
+                <div id="bookmarkList" class="bookmark-list mt-4 max-h-60 overflow-y-auto">
+            
+        </div>
+            <div class="modal__title text-md font-semibold">New Bookmark</div>
+            <div class="flex items-center mb-4 space-x-2">
+            
+        <input id="bookmarkName" type="text" class="modal__input mt-4 p-2 rounded bg-gray-700 border border-gray-600 placeholder-gray-400" placeholder="Enter bookmark name..." />
+        <input id="bookmarkIcon" type="file" name="bookmarkIcon" class=" hidden modal__input mt-2 p-2 rounded bg-gray-700 border border-gray-600" accept="image/*" />
+                <label for="bookmarkIcon" class="modal__button mt-2 font-medium text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"><i class="fa-solid fa-file-arrow-up mr-3 "></i> Upload Icon</label>
+        </div>
+        <input id="bookmarkUrl" type="text" class="modal__input mt-2 p-2 rounded bg-gray-700 border border-gray-600 placeholder-gray-400" placeholder="Enter URL (e.g., https://example.com)" />
+        
+        <button class="modal__button mt-4 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" id="saveBookmark">Create Bookmark</button>
+        <div class="flex items-center mb-4 space-x-2">
+                <button class="modal__button mt-2 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500" id="importBookmarks"><i class="fa-solid fa-file-import mr-3 "></i> Import</button>
+        <button class="modal__button mt-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500" id="exportBookmarks"><i class="fa-solid fa-file-export mr-3 "></i> Export</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        let response;
+        async function getPrediction() {
+            document.getElementById('responseContainer').style.display = 'none';
+            document.getElementById('loadingAnimation').style.display = 'block';
+            document.getElementById('messageText').innerHTML = '';
+
+            const userInput = document.getElementById('userInput').value;
+            const url = new URL("https://" + window.location.host + '/api/ai');
+            url.searchParams.append('userInput', userInput);
+
+            response = await fetch(url);
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+
+            let buffer = '';
+            let result = '';
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+
+                let lineEndIndex;
+                while ((lineEndIndex = buffer.indexOf('\n')) >= 0) {
+                    const line = buffer.slice(0, lineEndIndex + 1);
+                    buffer = buffer.slice(lineEndIndex + 1);
+                    if (line.startsWith('data: ')) {
+                        const jsonStr = line.substring(6);
+                        try {
+                            const jsonObj = JSON.parse(jsonStr);
+                            if (jsonObj.choices && jsonObj.choices[0] && jsonObj.choices[0].delta && jsonObj.choices[0].delta.content) {
+                                result += jsonObj.choices[0].delta.content;
+                            }
+                        } catch (error) {
+                            console.error('Error parsing JSON:', error);
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('loadingAnimation').style.display = 'none';
+            document.getElementById('responseContainer').style.display = 'block';
+            document.getElementById('messageText').innerHTML = marked.parse(result);
+        }
+        async function cbEdit() {
+            document.getElementById("copyButton").innerText = "Copied ✅";
+            await delay(2000);
+            document.getElementById("copyButton").innerText = "Copy Response";
+        }
+        function copyResponse() {
+            const responseText = response;
+            navigator.clipboard.writeText(responseText).then(() => {
+                cbEdit();
+            }).catch(err => {
+                console.error('Error copying text: ', err);
+            });
+        }
+
+    </script>
+    <script>
+
+
+        function showModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'none';
+        }
+    </script>
+    <script>
+async function getUrl(item) {
+
+    let finishedURL = await window.chemicalEncode(item);
+    return finishedURL;
+}
+
+
+
+    </script>
+    <script>
+    async function init() {
+        let appUrl = await window.chemicalEncode("https://google.com");
+        document.getElementById("proxyFrame").src = appUrl;
+    }
+    window.onload = init();
+        const drawerButton = document.getElementById('drawerButton');
+        const closeDrawer = document.getElementById('closeDrawer');
+        const drawer = document.getElementById('drawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+
+        drawerButton.addEventListener('click', () => {
+            drawer.classList.remove('slide-out');
+            drawer.classList.add('slide-in');
+            drawerOverlay.classList.remove('hidden');
+        });
+
+        closeDrawer.addEventListener('click', () => {
+            drawer.classList.remove('slide-in');
+            drawer.classList.add('slide-out');
+            drawerOverlay.classList.add('hidden');
+        });
+
+        drawerOverlay.addEventListener('click', () => {
+            drawer.classList.remove('slide-in');
+            drawer.classList.add('slide-out');
+            drawerOverlay.classList.add('hidden');
+        });
+
+              document.getElementById('takeScreenshot').addEventListener('click', () => {
+            const iframe = document.getElementById('proxyFrame');
+            const iframeWindow = iframe.contentWindow;
+            html2canvas(iframeWindow.document.body).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'screenshot.png';
+                link.click();
+            });
+        });
+        const script = document.createElement('script');
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js";
+        document.body.appendChild(script);
+        
+     let mediaRecorder;
+let recordedChunks = [];
+let recordingStartTime;
+let recordingInterval;
+
+document.getElementById('recordScreen').addEventListener('click', async () => {
+    const button = document.getElementById('recordScreen');
+    const recordingTime = document.getElementById('recordingTime');
+    const iframe = document.getElementById('proxyFrame');
+
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        clearInterval(recordingInterval);
+        button.textContent = 'Start';
+        button.style.backgroundColor = '';
+        recordingTime.textContent = '00:00:00';
+    } else {
+        try {
+            const stream = await iframe.contentWindow.navigator.mediaDevices.getDisplayMedia({
+                video: { mediaSource: 'screen' }
+            });
+
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'recording.webm';
+                a.click();
+                URL.revokeObjectURL(url);
+                recordedChunks = [];
+            };
+
+            mediaRecorder.start();
+            drawer.classList.remove('slide-in');
+            drawer.classList.add('slide-out');
+            drawerOverlay.classList.add('hidden');
+            recordingStartTime = Date.now();
+            recordingInterval = setInterval(updateRecordingTime, 1000);
+
+            button.textContent = 'Stop';
+            button.style.backgroundColor = 'white';
+        } catch (err) {
+            console.error('Error starting screen recording:', err);
+        }
+    }
+});
+
+function updateRecordingTime() {
+    const recordingTime = document.getElementById('recordingTime');
+    const elapsedTime = Date.now() - recordingStartTime;
+    const hours = String(Math.floor(elapsedTime / 3600000)).padStart(2, '0');
+    const minutes = String(Math.floor((elapsedTime % 3600000) / 60000)).padStart(2, '0');
+    const seconds = String(Math.floor((elapsedTime % 60000) / 1000)).padStart(2, '0');
+    recordingTime.textContent = `${hours}:${minutes}:${seconds}`;
+}
+        document.getElementById('changeUrl').addEventListener('click', async () => {
+        showModal('modal');
+        });
+              document.getElementById('SAVEchangeUrl').addEventListener('click', async () => {
+            let input = document.getElementById("inputText").value;
+            if (input) {
+                document.getElementById('proxyFrame').src = await window.chemicalEncode(input)
+            }
+                        drawer.classList.remove('slide-in');
+            drawer.classList.add('slide-out');
+            drawerOverlay.classList.add('hidden');
+            closeModal('modal');
+        });
+                document.getElementById('openAIModal').addEventListener('click', () => {
+        showModal('AImodal');
+        });
+
+        document.getElementById('newSession').addEventListener('click', async () => {
+            document.getElementById('proxyFrame').src = await window.chemicalEncode("https://google.com");
+        });
+        document.getElementById('openGoogle').addEventListener('click', async () => {
+            document.getElementById('proxyFrame').src = await window.chemicalEncode("https://google.com");
+        });
+        document.getElementById('openYahoo').addEventListener('click', async () => {
+            document.getElementById('proxyFrame').src = await window.chemicalEncode("https://search.yahoo.com/web");
+        });
+document.getElementById('openBookmarks').addEventListener('click', () => {
+    showModal('bookmarks_modal');
+});
+
+document.getElementById('saveBookmark').addEventListener('click', () => {
+    const name = document.getElementById('bookmarkName').value;
+    const url = document.getElementById('bookmarkUrl').value;
+    const iconInput = document.getElementById('bookmarkIcon');
+    
+    if (!name || !url) {
+        alert('Please provide both a name and a URL for the bookmark.');
+        return;
+    }
+
+    let iconDataUri = '';
+
+    // Convert the uploaded icon to Data URI
+    if (iconInput.files[0]) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            iconDataUri = reader.result;
+            addBookmark(name, url, iconDataUri);
+        };
+        reader.readAsDataURL(iconInput.files[0]);
+    } else {
+        addBookmark(name, url, iconDataUri);
+    }
+});
+
+function addBookmark(name, url, icon) {
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    bookmarks.push({ name, url, icon });
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    displayBookmarks();
+    closeModal('bookmarks_modal');
+}
+
+function displayBookmarks() {
+    const bookmarkList = document.getElementById('bookmarkList');
+    bookmarkList.innerHTML = '';
+
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    bookmarks.forEach(bookmark => {
+        const listItem = document.createElement('div');
+        listItem.className = 'bookmark-item flex items-center glass  p-4 border-1 border-gray-600 rounded mb-2';
+        listItem.innerHTML = `
+            <img src="${bookmark.icon}" alt="${bookmark.name} icon" class="bookmark-icon w-8 h-8 mr-2 rounded">
+            <span class="bookmark-name flex-1 text-white">${bookmark.name}</span>
+            <button onclick="updateFrame('${bookmark.url}')" class="glass text-white py-1 px-2 rounded hover:font-bold">Open</button>
+        `;
+        bookmarkList.appendChild(listItem);
+    });
+}
+
+function updateFrame(url) {
+    document.getElementById('proxyFrame').src = url;
+}
+
+document.getElementById('exportBookmarks').addEventListener('click', () => {
+    const bookmarks = localStorage.getItem('bookmarks');
+    const blob = new Blob([bookmarks], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bookmarks.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+document.getElementById('importBookmarks').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = () => {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const bookmarks = JSON.parse(event.target.result);
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            displayBookmarks();
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+});
+
+window.onload = displayBookmarks;
+
+        document.getElementById('fullscreen').addEventListener('click', () => {
+            const iframe = document.body;
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { /* Firefox */
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { /* IE/Edge */
+                iframe.msRequestFullscreen();
+            }
+        });
+
+        document.getElementById('generatePassword').addEventListener('click', () => {
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let password = "";
+            for (let i = 0; i < 12; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            alert('Generated Password: ' + password);
+        });
+
+        document.getElementById('clearStorage').addEventListener('click', () => {
+            localStorage.clear();
+            sessionStorage.clear();
+            alert('Storage cleared.');
+        });
+
+        document.getElementById('increaseVolume').addEventListener('click', () => {
+            const iframe = document.getElementById('myIframe');
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            const mediaElements = iframeDocument.querySelectorAll('video, audio');
+            
+            mediaElements.forEach(media => {
+                media.volume = Math.min(media.volume + 0.1, 1); 
+            });
+        });
+        
+        document.getElementById('decreaseVolume').addEventListener('click', () => {
+            const iframe = document.getElementById('myIframe');
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            const mediaElements = iframeDocument.querySelectorAll('video, audio');
+            
+            mediaElements.forEach(media => {
+                media.volume = Math.max(media.volume - 0.1, 0); // Decrease volume by 0.1, min 0
+            });
+        });
+        
+        let zoomLevel = 1;
+        const zoomStep = 0.1; 
+        
+        document.getElementById('zoomIn').addEventListener('click', () => {
+            zoomLevel += zoomStep;
+            updateIframeZoom();
+        });
+        
+        document.getElementById('zoomOut').addEventListener('click', () => {
+            zoomLevel = Math.max(zoomLevel - zoomStep, zoomStep);
+            updateIframeZoom();
+        });
+        
+        function updateIframeZoom() {
+            const iframe = document.getElementById('myIframe');
+            iframe.style.transform = `scale(${zoomLevel})`;
+            iframe.style.transformOrigin = '0 0';
+            iframe.style.width = `${100 / zoomLevel}%`; 
+            iframe.style.height = `${100 / zoomLevel}%`; 
+        }
+
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            document.getElementById('proxyFrame').contentWindow.history.back();
+        });
+
+        document.getElementById('refreshButton').addEventListener('click', () => {
+            document.getElementById('proxyFrame').contentWindow.location.reload();
+        });
+
+        document.getElementById('forwardButton').addEventListener('click', () => {
+            document.getElementById('proxyFrame').contentWindow.history.forward();
+        });
+                document.getElementById('insertDevtools').addEventListener('click', () => {
+            const iframe = document.getElementById('proxyFrame').contentWindow;
+            const script = document.createElement('script');
+            script.src = "https://cdn.jsdelivr.net/npm/eruda";
+            script.onload = function () {
+                iframe.eruda.init();
+            };
+            iframe.document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>
